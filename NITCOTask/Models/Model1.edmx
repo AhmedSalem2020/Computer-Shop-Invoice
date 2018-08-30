@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="NITCOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="price" Type="money" />
+          <Property Name="categoryId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResetDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="productId" Type="int" Nullable="false" />
+          <Property Name="ResetHeaderId" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="soldPrice" Type="money" />
+        </EntityType>
+        <EntityType Name="ResetHeader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="netPrice" Type="money" />
+        </EntityType>
+        <Association Name="FK_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="categoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResetDetails_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ResetDetails" Type="Self.ResetDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ResetDetails">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResetDetails_ResetHeader">
+          <End Role="ResetHeader" Type="Self.ResetHeader" Multiplicity="1" />
+          <End Role="ResetDetails" Type="Self.ResetDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResetHeader">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResetDetails">
+              <PropertyRef Name="ResetHeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="NITCOModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResetDetails" EntityType="Self.ResetDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResetHeader" EntityType="Self.ResetHeader" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResetDetails_Product" Association="Self.FK_ResetDetails_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ResetDetails" EntitySet="ResetDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResetDetails_ResetHeader" Association="Self.FK_ResetDetails_ResetHeader">
+            <End Role="ResetHeader" EntitySet="ResetHeader" />
+            <End Role="ResetDetails" EntitySet="ResetDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NITCOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="NITCOEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categories" EntityType="NITCOModel.Category" />
+          <EntitySet Name="Products" EntityType="NITCOModel.Product" />
+          <EntitySet Name="ResetDetails" EntityType="NITCOModel.ResetDetail" />
+          <EntitySet Name="ResetHeaders" EntityType="NITCOModel.ResetHeader" />
+          <AssociationSet Name="FK_Product_Category" Association="NITCOModel.FK_Product_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResetDetails_Product" Association="NITCOModel.FK_ResetDetails_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ResetDetail" EntitySet="ResetDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResetDetails_ResetHeader" Association="NITCOModel.FK_ResetDetails_ResetHeader">
+            <End Role="ResetHeader" EntitySet="ResetHeaders" />
+            <End Role="ResetDetail" EntitySet="ResetDetails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Products" Relationship="NITCOModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="categoryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="NITCOModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="ResetDetails" Relationship="NITCOModel.FK_ResetDetails_Product" FromRole="Product" ToRole="ResetDetail" />
+        </EntityType>
+        <EntityType Name="ResetDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <Property Name="ResetHeaderId" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="soldPrice" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="Product" Relationship="NITCOModel.FK_ResetDetails_Product" FromRole="ResetDetail" ToRole="Product" />
+          <NavigationProperty Name="ResetHeader" Relationship="NITCOModel.FK_ResetDetails_ResetHeader" FromRole="ResetDetail" ToRole="ResetHeader" />
+        </EntityType>
+        <EntityType Name="ResetHeader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="netPrice" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="ResetDetails" Relationship="NITCOModel.FK_ResetDetails_ResetHeader" FromRole="ResetHeader" ToRole="ResetDetail" />
+        </EntityType>
+        <Association Name="FK_Product_Category">
+          <End Type="NITCOModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="NITCOModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="categoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResetDetails_Product">
+          <End Type="NITCOModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="NITCOModel.ResetDetail" Role="ResetDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ResetDetail">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResetDetails_ResetHeader">
+          <End Type="NITCOModel.ResetHeader" Role="ResetHeader" Multiplicity="1" />
+          <End Type="NITCOModel.ResetDetail" Role="ResetDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResetHeader">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResetDetail">
+              <PropertyRef Name="ResetHeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NITCOModelStoreContainer" CdmEntityContainer="NITCOEntities">
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="NITCOModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="NITCOModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResetDetails">
+            <EntityTypeMapping TypeName="NITCOModel.ResetDetail">
+              <MappingFragment StoreEntitySet="ResetDetails">
+                <ScalarProperty Name="soldPrice" ColumnName="soldPrice" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="ResetHeaderId" ColumnName="ResetHeaderId" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResetHeaders">
+            <EntityTypeMapping TypeName="NITCOModel.ResetHeader">
+              <MappingFragment StoreEntitySet="ResetHeader">
+                <ScalarProperty Name="netPrice" ColumnName="netPrice" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,191 @@
+﻿@model NITCOTask.Models.Product
+@{
+    ViewBag.Title = "Order";
+}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Datepicker - Display button bar</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+</head>
+    <br />
+    <br />
+    <body>
+        <div class="container">
+
+            <div class="form-group col-xs-6">
+                Reset Number <input type="text" value="@ViewBag.resetId"  class="form-control" disabled />
+            </div>
+            <div class="form-group col-xs-6">
+                @*Reset Date <input type="date" class="form-control" />*@
+                <p>Reset Date: <input type="text"  class="form-control" id="datepicker"></p>
+            </div>
+            <table id="AdminTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Categry</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Net Price</th>
+                    </tr>
+                </thead>
+                <tbody id="load">
+                    @for (var i = 0; i < 3; i++)
+                    {
+                        <tr>
+                            <td> @Html.DropDownListFor(a => a.categoryId, ViewBag.names as SelectList, "Choose", new { @class = "form-control proName" }) </td>
+
+                            <td>
+                                <select class="form-control" id="type" name="type">
+                                    
+                                </select>
+                            </td>
+
+                            <td>
+                                <label class="form-control" id="price" value="@ViewBag.price" name="price"></label>
+                            </td>
+                            <td>
+                                <input class="form-control calc" id="qnt"  type="text" value="1" />
+                            </td>
+                            <td>
+                                <label class="form-control net" id="net" name="net"></label>
+                                @*<button class="btn btn-primary  calc">Calculate</button>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div>
+                <a onclick="seeMore()">See More </a>
+            </div>
+            <br />
+            <br />
+            <div>
+                <label class="form-control" id="All" name="net"></label>
+                <button class="btn btn-danger  calcall"  onclick="calcall()">Calculate</button>
+                <button class="btn btn-info" onclick="print()">Print Reset</button>
+            </div>
+            <div id="print"></div>
+        </div>
+ </body>
+    @section scripts
+{
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+  $( function() {
+    $( "#datepicker" ).datepicker({
+      showButtonPanel: true
+    });
+  } );
+        </script>
+
+        <script>
+       // debugger;
+        $("#AdminTable").on('change', ".proName", function () {
+            //console.log("dddd");
+            var x = this.value; //get the value of ddl 
+            var trparent = $(this).parents('tr');
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                //contentType: "application/json;charset=utf-8",
+                url: "/Home/ProTypes/",//'@Url.Action("ProTypes", "Home")' ,
+                data: {id: x },
+
+                success: function (results) {
+                    //var text = $(this).closest('tr').find('.name').text();
+                    th = this;
+                    var tr = trparent;
+                    var proList = tr.find('#type');//$("#type");//
+                    var listValues = "<option>Choose your product</option>";
+                    for (let i = 0; i < results.length; i++) {
+                        listValues += "<option value=" + results[i].Value + ">" + results[i].Text + "</option>";
+                    }
+                    proList.html(listValues);
+                    console.log(results);
+
+                },
+                error: function (results) {
+                    glo = results;
+                    console.log( results);
+                }
+            });//ajaxCall
+           console.log(x);
+        })
+
+
+      //  $("#type").on('change', function () {
+        $("#AdminTable").on('change', "#type", function () {
+            var trparent = $(this).parents('tr');
+            //ahmed = trparent;
+
+            var x = this.value;
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                //contentType: "application/json;charset=utf-8",
+                url: "/Home/price/",//'@Url.Action("prices", "Home")' ,
+                data: { id: x },
+
+                success: function (results) {
+                    var priceText = trparent.find('#price');
+                    priceText.text(results.price);
+
+
+                },
+                error: function (results) {
+                    glo = results;
+                    console.log(results);
+                }
+            });//ajaxCall
+
+        })
+            // debugger
+
+            $("#AdminTable").on("change", ".calc", function () {
+
+                //console.log("dddddd");
+                var trparent = $(this).parents('tr');
+                    var netPrice = trparent.find('#net');
+                    var priceVlue = trparent.find('#price').text();
+                    var qntVluee = trparent.find('#qnt').val();
+
+                    netPrice.text(parseInt(priceVlue) * parseInt(qntVluee));
+
+                    console.log(netPrice.text(parseInt(priceVlue) * parseInt(qntVluee)));
+            });
+            
+
+        function seeMore() {
+            var tr1 = $("tr:eq(1)").clone();
+            tr1.find("#qnt").val("1");
+            tr1.find("#price").text("");
+            tr1.find("#net").text("");
+            tr1.find("#type").html("");
+            var tr2 = tr1.clone();
+            var tr3 = tr1.clone();
+
+            $("table tbody").append(tr1);
+            $("table tbody").append(tr2);
+            $("table tbody").append(tr3);
+        }
+
+        function calcall() {
+            var total = 0;
+            $(".net").each(function () {
+                if ($(this).text()!="")
+                    total += parseInt($(this).text());
+            })
+            $("#All").text(total);
+        }
+
+        function print() {
+
+            alert("please wait while Printing the Reset... ");
+        }
+        </script>
+
+    }
